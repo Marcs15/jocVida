@@ -1,3 +1,5 @@
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Joc_de_la_vida {
@@ -6,16 +8,33 @@ public class Joc_de_la_vida {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		
+	      
 		Joc_de_la_vida joc=new Joc_de_la_vida();
 		joc.principio();
 	
 	}
 	
-	private static final char Vivo = '1';
-	private static final char Muerto = '0';
+	private static final int Vivo = 1;
+	private static final int Muerto = 0;
 	
 	public void principio() {
+		
+		/*/////////////////////////////////////////////////////////////////////////////////////////////////
+									boolean ahueboperro = true; 
+									
+									while (ahueboperro) {
+										System.out.println("x");
+										int x = entrada.nextInt();
+										
+										System.out.println("y");
+										int y = entrada.nextInt();
+										
+										int ahueboperron[][] = coordCeldas(x,y, 10, 10);
+										for(int puta = 0; puta < ahueboperron.length; puta++) {
+											System.out.println("vecinas: " + puta + " x : " + ahueboperron[puta][0] + " y : " + ahueboperron[puta][1] );
+										}
+									}
+		//////////////////////////////////////////////////////////////////////////////////////////////// */
 		
 		int filasy = leerEntero("De cuantas filas quieres el tablero");
 	
@@ -30,6 +49,8 @@ public class Joc_de_la_vida {
 		empezarSimulacion(tablero);
 		
 		//comprobarTablero(tablero);
+		
+		
 		
 	}
 	
@@ -66,7 +87,7 @@ public class Joc_de_la_vida {
 	public void imprimirTablero(int tablero[][]) {
 		for (int y = 0; y < tablero.length; y++) {
 			for (int x = 0; x < tablero.length; x++) {
-				System.out.print(tablero[y][x]+" ");
+				System.out.print((tablero[y][x] == Vivo ? (char)9679 : (char)9675) + " ");
 			}
 			System.out.println();
 		}
@@ -84,9 +105,9 @@ public class Joc_de_la_vida {
 		for (int recorr = 0; recorr < tablero.length; recorr ++) {
 			for (int recorr2 = 0; recorr2 < tablero[recorr].length; recorr2 ++) {
 				
-				
+					
 				int contadorvivos;
-				
+				 
 				int contadormuertos;
 			
 				
@@ -95,10 +116,68 @@ public class Joc_de_la_vida {
 	}
 	
 	
-	public void coordCeldas() {
+	public int [][] coordCeldas(int x, int y, int columnasX, int filasY) {
 		//dime coordenada x y coordenada y, y buscar las vecinas, a partir de ahi construir un array 2dim , donde guardara la posx y posy de las celdas vecinas
 		// otro metodo que reciba array vecinas, y devuelva cuantas de ellas estan vivas. 
+		
+		int[][] vecinitas = new int [8][2];
+		
+		y--;
+	
+		vecinitas[0][0] = x;
+		vecinitas[0][1] = y;
+		x++;
+		
+		vecinitas[1][0] = x;
+		vecinitas[1][1] = y;
+		x--;
+		x--;
+		
+		vecinitas[2][0] = x;
+		vecinitas[2][1] = y;
+		
+		y++;
+		
+		vecinitas[3][0] = x;
+		vecinitas[3][1] = y;
+		
+		y++;
+		
+		vecinitas[4][0] = x;
+		vecinitas[4][1] = y;
+		
+		x++;
+		
+		vecinitas[5][0] = x;
+		vecinitas[5][1] = y;
+		
+		x++;
+		
+		vecinitas[6][0] = x;
+		vecinitas[6][1] = y;
+		
+		y--;
+		
+		vecinitas[7][0] = x;
+		vecinitas[7][1] = y;
+		
+		int [][] vecinitasfinal  = new int [8][2];
+		
+		int contador = 0;
+		
+		for (int recorrer = 0; recorrer < vecinitas.length; recorrer ++) {
+			if ((vecinitas[recorrer][0] >= 0 && vecinitas[recorrer][0] < columnasX) && (vecinitas[recorrer][1] >= 0 && vecinitas[recorrer][1] < filasY)) {
+				vecinitasfinal [contador] = vecinitas[recorrer];
+				contador ++;
+			}
+			
+		}
+
+		return Arrays.copyOfRange(vecinitasfinal, 0, contador);
 	}
+	
+	//public 
+	// recibir array de vecinas, para decir cuantas vecinas estan vivas
 	
 	/*public void comprobarTablero (int tablero[][]) {
 		boolean bandera;
