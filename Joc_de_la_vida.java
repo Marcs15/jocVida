@@ -30,7 +30,7 @@ public class Joc_de_la_vida {
 										int y = entrada.nextInt();
 										
 										int ahueboperron[][] = coordCeldas(x,y, 10, 10);
-										for(int puta = 0; puta < ahueboperron.length; puta++) {
+										for(int puta = 0; puta < ahuebop	erron.length; puta++) {
 											System.out.println("vecinas: " + puta + " x : " + ahueboperron[puta][0] + " y : " + ahueboperron[puta][1] );
 										}
 									}
@@ -51,6 +51,40 @@ public class Joc_de_la_vida {
 		//comprobarTablero(tablero);
 		
 		
+		
+	}
+	
+	public void CrearMenu () {
+		
+		System.out.println("1. Crear celulas manualmente:"); 
+		System.out.println("2. Crear celulas automáticamente");
+		System.out.println("3. Editar medida tablero: ");
+		System.out.println("4. Ver el tablero: ");
+		System.out.println("5. Jugar partida: ");
+		System.out.println("6. Salir ");
+		
+		int opcionesKowalski = 5;
+		switch (opcionesKowalski) {
+		
+			case 1: 
+				
+				break;
+				
+			case 2: 
+				break;
+				
+			case 3: 
+				break;
+				
+			case 4:
+				break;
+				
+			case 5:
+				break;
+				
+			
+	
+		}
 		
 	}
 	
