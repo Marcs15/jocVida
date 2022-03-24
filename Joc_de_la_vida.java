@@ -36,17 +36,9 @@ public class Joc_de_la_vida {
 									}
 		//////////////////////////////////////////////////////////////////////////////////////////////// */
 		
-		int filasy = leerEntero("De cuantas filas quieres el tablero");
-	
-		int columnasx = leerEntero("De cuantas columnas quieres el tablero");
+		CrearMenu();
 		
-		int [][] tablero =crearTablero(filasy, columnasx);
-		
-		imprimirTablero(tablero);
-		
-		colocarCeldas(tablero);
-		
-		empezarSimulacion(tablero);
+
 		
 		//comprobarTablero(tablero);
 		
@@ -56,17 +48,33 @@ public class Joc_de_la_vida {
 	
 	public void CrearMenu () {
 		
-		System.out.println("1. Crear celulas manualmente:"); 
+		int [][] tablero = null;
+								
+		System.out.println("0. Crear tablero"); 
+		System.out.println("1. Crear celulas manualmente"); 
 		System.out.println("2. Crear celulas automáticamente");
 		System.out.println("3. Editar medida tablero: ");
 		System.out.println("4. Ver el tablero: ");
 		System.out.println("5. Jugar partida: ");
 		System.out.println("6. Salir ");
 		
-		int opcionesKowalski = 5;
-		switch (opcionesKowalski) {
-		
+		while(true) {
+			
+			int opcio = leerEntero("Introduce una opcion:");
+			
+			switch (opcio) {
+			
+			case 0:
+				int filasy = leerEntero("De cuantas filas quieres el tablero");
+				
+				int columnasx = leerEntero("De cuantas columnas quieres el tablero");
+				tablero =crearTablero(filasy, columnasx);
+				
+				break;
+			
 			case 1: 
+				
+				colocarCeldas(tablero);
 				
 				break;
 				
@@ -77,15 +85,24 @@ public class Joc_de_la_vida {
 				break;
 				
 			case 4:
+				imprimirTablero(tablero);
 				break;
 				
 			case 5:
+				empezarSimulacion(tablero);
 				break;
+			case 6:
+				System.exit(0);
+				break;
+			default:
+				System.err.println("Introdueix una opcio vàlida");
 				
 			
 	
 		}
-		
+			
+		}
+				
 	}
 	
 	public void colocarCeldas(int [] [] tablero) {
