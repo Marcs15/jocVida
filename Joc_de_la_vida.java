@@ -1,47 +1,23 @@
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class Joc_de_la_vida {
+public class Joc_de_la_vida{
 	
 	Scanner entrada = new Scanner(System.in);
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 	      
-		Joc_de_la_vida joc=new Joc_de_la_vida();
-		joc.principio();
-	
+		Joc_de_la_vida joc=new Joc_de_la_vida ();
+		joc.principio(); 
 	}
 	
-	private static final int Vivo = 1;
-	private static final int Muerto = 0;
+	private static final int VIVO = 1;
+	private static final int MUERTO = 0;
 	
 	public void principio() {
 		
-		/*/////////////////////////////////////////////////////////////////////////////////////////////////
-									boolean ahueboperro = true; 
-									
-									while (ahueboperro) {
-										System.out.println("x");
-										int x = entrada.nextInt();
-										
-										System.out.println("y");
-										int y = entrada.nextInt();
-										
-										int ahueboperron[][] = coordCeldas(x,y, 10, 10);
-										for(int puta = 0; puta < ahuebop	erron.length; puta++) {
-											System.out.println("vecinas: " + puta + " x : " + ahueboperron[puta][0] + " y : " + ahueboperron[puta][1] );
-										}
-									}
-		//////////////////////////////////////////////////////////////////////////////////////////////// */
-		
 		CrearMenu();
-		
-
-		
-		//comprobarTablero(tablero);
-		
 		
 		
 	}
@@ -49,16 +25,20 @@ public class Joc_de_la_vida {
 	public void CrearMenu () {
 		
 		int [][] tablero = null;
-								
-		System.out.println("0. Crear tablero"); 
-		System.out.println("1. Crear celulas manualmente"); 
-		System.out.println("2. Crear celulas automáticamente");
-		System.out.println("3. Editar medida tablero: ");
-		System.out.println("4. Ver el tablero: ");
-		System.out.println("5. Jugar partida: ");
-		System.out.println("6. Salir ");
+		
+		int [] reglas = {2,3,3};
+		
+		
 		
 		while(true) {
+
+			System.out.println("\n0. Crear tablero"); 
+			System.out.println("1. Crear celulas manualmente"); 
+			System.out.println("2. Crear celulas automáticamente");
+			System.out.println("3. Editar reglas del juego: ");
+			System.out.println("4. Ver el tablero: ");
+			System.out.println("5. Jugar partida: ");
+			System.out.println("6. Salir ");
 			
 			int opcio = leerEntero("Introduce una opcion:");
 			
@@ -79,9 +59,17 @@ public class Joc_de_la_vida {
 				break;
 				
 			case 2: 
+				//pedir un entero, crear un metodo crearceldasautomaticas, pasar el tablero por parametros,
+				//este metodo te pedira el numero de colonias, y a partir de ahi hacer un do while, por cada colonia
+				//otro do while
+				
+				crearcelulasAuto(tablero);				
+				
 				break;
 				
+				
 			case 3: 
+				reglas = editarReglas();
 				break;
 				
 			case 4:
@@ -89,8 +77,20 @@ public class Joc_de_la_vida {
 				break;
 				
 			case 5:
-				empezarSimulacion(tablero);
-				break;
+				int generaciones = 0;
+				while(true) {
+					generaciones ++;
+					System.out.println("Generación : " + generaciones);
+					tablero = empezarSimulacion(tablero, reglas);
+					imprimirTablero(tablero);
+					System.out.println();
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 			case 6:
 				System.exit(0);
 				break;
@@ -138,7 +138,8 @@ public class Joc_de_la_vida {
 	public void imprimirTablero(int tablero[][]) {
 		for (int y = 0; y < tablero.length; y++) {
 			for (int x = 0; x < tablero.length; x++) {
-				System.out.print((tablero[y][x] == Vivo ? (char)9679 : (char)9675) + " ");
+				System.out.print((tablero[y][x] == VIVO ? '●' : '○') + " ");
+				
 			}
 			System.out.println();
 		}
@@ -152,18 +153,37 @@ public class Joc_de_la_vida {
 		
 	}
 	
-	public void empezarSimulacion(int [] [] tablero) {
+	public int [] [] empezarSimulacion(int [] [] tablero, int [] reglas) {
+		
+		int [][] tableroCopia = new int [tablero.length] [tablero[0].length];
+		
+		int minsobrevivir = reglas[0];
+		int maxsobrevivir = reglas[1];
+		int revivir = reglas [2];
+		
 		for (int recorr = 0; recorr < tablero.length; recorr ++) {
 			for (int recorr2 = 0; recorr2 < tablero[recorr].length; recorr2 ++) {
 				
-					
-				int contadorvivos;
-				 
-				int contadormuertos;
-			
+				tableroCopia[recorr][recorr2] = tablero[recorr][recorr2];  
+				
+				int [][] Vecinas = coordCeldas(recorr2, recorr, tablero[0].length , tablero.length);		
+				int VecinasVivas = VecinitasVivas(Vecinas, tablero);
+								
+				if (tablero[recorr][recorr2] == VIVO && !(VecinasVivas >= minsobrevivir && VecinasVivas <= maxsobrevivir))  {
+					tableroCopia[recorr][recorr2] = MUERTO;
+				}
+				
+				else if (tablero[recorr][recorr2] == MUERTO && VecinasVivas == revivir) {
+					tableroCopia[recorr][recorr2] = VIVO;
+				}
 				
 			}
 		}
+		
+		tablero = tableroCopia;
+		
+		return tablero;
+		
 	}
 	
 	
@@ -227,36 +247,80 @@ public class Joc_de_la_vida {
 		return Arrays.copyOfRange(vecinitasfinal, 0, contador);
 	}
 	
-	//public 
-	// recibir array de vecinas, para decir cuantas vecinas estan vivas
-	
-	/*public void comprobarTablero (int tablero[][]) {
-		boolean bandera;
-		for (int y = 0; y < tablero.length; y ++) {
-			for (int x = 0; x < tablero[y].length; x ++) {
-				int casilla = tablero[y][x];
+	public int VecinitasVivas(int [][] Vecinas, int [][] tablero) {
+		
+		int contadorvivas = 0;
+		
+		for (int vivas = 0; vivas < Vecinas.length; vivas ++ ) {
+			int [] celda = Vecinas [vivas];
+			
+			int x = celda[0];
+			int y = celda[1];
+			
+			
+			
+			if(tablero[y][x] == VIVO) {
+				contadorvivas ++;
 				
-				if (casilla == Muerto) {
-					bandera = comprobarCasilla(false, y, x );
-				}
-				
-				else {
-					bandera = comprobarCasilla(true, y, x );
-				}
-				
-				if (bandera) {
-					tablero[y][x] = Vivo;
-					
-				}
-				
-				else {
-					tablero[y][x] = Muerto;
-				}
 			}
 			
 		}
+		
+		return contadorvivas;
 	}
-	*/
+	// recibir array de vecinas, para decir cuantas vecinas estan vivas
+	
+	public int[] editarReglas() {
+		System.out.println("Introduce las nuevas reglas");
+		String regla = entrada.next();
+		String [] guardar = regla.split("/");
+		int minsobrevivir = Integer.parseInt(String.valueOf(guardar[0].charAt(0)));
+		int maxsobrevivir = Integer.parseInt(String.valueOf(guardar[0].charAt(1)));
+		int revivir = Integer.parseInt(String.valueOf(guardar[1]));
+		return new int [] {minsobrevivir,maxsobrevivir, revivir};
+		
+	}
+	
+	public void crearcelulasAuto(int [][] tablero) {
+		System.out.println("Introduce cuantas colonias quieres empezar: ");
+		int coloniascreadas = entrada.nextInt();
+		
+		for (int col = 0; col<coloniascreadas; col ++) {
+			
+			int coordx;
+			int coordy; 
+			do {
+				coordx = (int)(Math.random()*tablero[0].length);
+				coordy = (int)(Math.random()*tablero.length);
+			}
+			while(tablero[coordy][coordx] == VIVO || ((coordx == 0 || coordx == tablero[0].length) && (coordy == 0 || coordy == tablero.length))) ; 
+			
+			tablero[coordy][coordx] = VIVO;
+			
+			int [][] Vecinas = coordCeldas(coordx, coordy, tablero[0].length , tablero.length);
+			
+			while(VecinitasVivas(Vecinas, tablero) < 4) {
+				
+				int coordXVecinas;
+				int coordYVecinas;
+				
+				do {
+					int posrandomVecinas = (int)(Math.random()*Vecinas.length);
+					
+					coordXVecinas = Vecinas[posrandomVecinas][0];
+					coordYVecinas = Vecinas[posrandomVecinas][1];
+				}
+				
+				while(tablero[coordYVecinas][coordXVecinas] == VIVO);
+			
+				tablero[coordYVecinas][coordXVecinas] = VIVO;
+				
+				Vecinas = coordCeldas(coordx, coordy, tablero[0].length , tablero.length);
+			}
+			
+		}
+		
+	}
 	
 	/*
 	public boolean comprobarCasilla(boolean bandera, int y, int x ) {
